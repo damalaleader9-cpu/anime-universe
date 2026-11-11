@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime Universe</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #090d18;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 20px;
+    background: #111827;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #8b5cf6;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 12px;
+}
+
+.hero {
+    padding: 65px 20px;
+    text-align: center;
+    background: linear-gradient(135deg,#241052,#111827,#071b35);
+}
+
+.hero h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    color: #cbd5e1;
+    margin-bottom: 25px;
+}
+
+input {
+    width: 90%;
+    max-width: 450px;
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+}
+
+section {
+    padding: 25px 15px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #a78bfa;
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.categories button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #252c40;
+    color: white;
+    cursor: pointer;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(145px,1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #171e30;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 15px;
+}
+
+.poster {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 55px;
+    background: linear-gradient(135deg,#4c1d95,#172554);
+}
+
+.card h3 {
+    padding: 12px 10px 5px;
+    font-size: 16px;
+}
+
+.card p {
+    padding: 0 10px;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.card button {
+    margin: 12px 10px 0;
+    padding: 9px;
+    border: none;
+    border-radius: 7px;
+    background: #7c3aed;
+    color: white;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    background: #111827;
+    color: #9ca3af;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🌌 ANIME UNIVERSE</div>
+    <nav>
+        <a href="#accueil">Accueil</a>
+        <a href="#animes">Animés</a>
+        <a href="#favoris">Favoris</a>
+    </nav>
+</header>
+
+<div class="hero" id="accueil">
+    <h1>Bienvenue dans Anime Universe</h1>
+    <p>Explore un univers infini d'animés !</p>
+    <input type="search" id="search"
+    placeholder="🔎 Rechercher un animé...">
+</div>
+
+<section>
+    <h2>Explorer les catégories</h2>
+    <div class="categories">
+        <button onclick="filterAnime('Tous')">Tous</button>
+        <button onclick="filterAnime('Action')">Action</button>
+        <button onclick="filterAnime('Aventure')">Aventure</button>
+        <button onclick="filterAnime('Fantastique')">Fantastique</button>
+        <button onclick="filterAnime('Romance')">Romance</button>
+    </div>
+</section>
+
+<section id="animes">
+    <h2>🔥 Animés populaires</h2>
+    <div class="grid" id="animeList"></div>
+</section>
+
+<section id="favoris">
+    <h2>⭐ Mes favoris</h2>
+    <div class="grid" id="favoriteList"></div>
+</section>
+
+<section>
+    <h2>📺 Où regarder tes animés ?</h2>
+    <div class="categories">
+        <button onclick="window.open('https://www.crunchyroll.com/')">
+            Crunchyroll
+        </button>
+        <button onclick="window.open('https://www.netflix.com/')">
+            Netflix
+        </button>
+        <button onclick="window.open('https://animationdigitalnetwork.fr/')">
+            ADN
+        </button>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Anime Universe</p>
+    <p>Ton univers, tes animés, ta passion.</p>
+</footer>
+
+<script>
+const animes = [
+    {name:"One Piece",category:"Aventure",icon:"🏴‍☠️"},
+    {name:"Naruto",category:"Action",icon:"🍥"},
+    {name:"Dragon Ball",category:"Action",icon:"🐉"},
+    {name:"Demon Slayer",category:"Action",icon:"⚔️"},
+    {name:"Jujutsu Kaisen",category:"Fant
