@@ -180,4 +180,139 @@ const anime = [
 
 ];
 
-co
+const categories=["Tous","Action","Aventure","Comédie","Fantastique","Sport"];
+
+let active="Tous",selectedAnime=null;
+
+const favs=()=>JSON.parse(localStorage.getItem("au_v4_favs")||"[]");
+
+function card(a){
+return `<article class="card">
+<div class="art" style="--art:${a.art}">${a.mark}</div>
+<div class="body">
+<h3>${a.title}</h3>
+<p>${a.year} · ${a.genres.join(" · ")}</p>
+<p>${a.desc}</p>
+<div class="controls">
+<button class="btn primary" onclick="chooseAnime(${a.id})">Ouvrir</button>
+<button class="btn" onclick="toggleFav(${a.id})">${favs().includes(a.id)?"♥":"♡"}</button>
+</div>
+</div>
+</article>`;
+}
+
+function render(){
+const q=document.getElementById('search').value.trim().toLowerCase();
+
+const list=anime.filter(a=>
+(active==='Tous'||a.genres.includes(active))&&
+(a.title.toLowerCase().includes(q)||a.genres.join(' ').toLowerCase().includes(q))
+);
+
+document.getElementById('catalogueGrid').innerHTML=
+list.length?list.map(card).join(''):'<div class="empty">Aucun résultat.</div>';
+
+document.getElementById('favoritesGrid').innerHTML=
+anime.filter(a=>favs().includes(a.id)).map(card).join('')||
+'<div class="empty">Tes favoris apparaîtront ici.</div>';
+
+document.getElementById('filters').innerHTML=
+categories.map(c=>`<button class="chip ${active===c?'active':''}" onclick="active='${c}';render()">${c}</button>`).join('');
+}
+
+function chooseAnime(id){
+selectedAnime=anime.find(a=>a.id===id);
+
+document.getElementById('nowPlaying').textContent=
+selectedAnime.title+' — '+selectedAnime.year;
+
+const sel=document.getElementById('episodeSelect');
+
+sel.innerHTML='<option value="">Choisir un épisode</option>'+
+selectedAnime.episodes.map((e,i)=>
+`<option value="${i}">${e.title||'Épisode '+e.number}</option>`
+).join('');
+
+document.getElementById('episodeList').innerHTML=
+selectedAnime.episodes.length?
+selectedAnime.episodes.map((e,i)=>
+`<button onclick="playEpisode(${i})">Épisode ${e.number}</button>`
+).join(''):
+'<div class="small">Aucun épisode configuré pour le moment.</div>';
+
+document.getElementById('screen').innerHTML=
+'<div class="placeholder">📺 '+selectedAnime.title+
+'<br><span class="small">Sélectionne un épisode.</span></div>';
+
+document.getElementById('playerStatus').textContent=
+'Aucun épisode disponible tant qu’une source autorisée n’est pas configurée.';
+
+document.getElementById('lecteur').scrollIntoView({behavior:'smooth'});
+}
+
+function playEpisode(index){
+if(!selectedAnime)return;
+
+const e=selectedAnime.episodes[index];
+if(!e)return;
+
+const screen=document.getElementById('screen');
+
+if(e.type==='file'){
+const v=document.createElement('video');
+v.controls=true;
+v.playsInline=true;
+v.preload='metadata';
+v.src=e.src;
+screen.replaceChildren(v);
+v.play().catch(()=>{});
+
+}else if(e.type==='embed'){
+const f=document.createElement('iframe');
+f.src=e.src;
+f.title=selectedAnime.title;
+f.allowFullscreen=true;
+f.allow='fullscreen; autoplay; encrypted-media; picture-in-picture';
+screen.replaceChildren(f);
+
+}else{
+return;
+}
+
+document.getElementById('nowPlaying').textContent=
+selectedAnime.title+' — '+(e.title||'Épisode '+e.number);
+
+document.getElementById('episodeSelect').value=String(index);
+}
+
+function toggleFav(id){
+let f=favs();
+
+f=f.includes(id)?f.filter(x=>x!==id):[...f,id];
+
+localStorage.setItem('au_v4_favs',JSON.stringify(f));
+
+render();
+}
+
+document.getElementById('search').addEventListener('input',render);
+
+document.getElementById('playBtn').addEventListener('click',()=>{
+const i=document.getElementById('episodeSelect').value;
+
+if(i!=='')playEpisode(Number(i));
+else document.getElementById('playerStatus').textContent=
+'Choisis d’abord un épisode.';
+});
+
+document.getElementById('fullscreenBtn').addEventListener('click',()=>{
+const s=document.getElementById('screen');
+if(s.requestFullscreen)s.requestFullscreen();
+});
+
+render();
+
+</script>
+</body>
+</html>
+
